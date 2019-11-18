@@ -1,67 +1,45 @@
 package com.fiap.javaplatform.telegrambot;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.TelegramBotAdapter;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.ChatAction;
-import com.pengrad.telegrambot.request.GetUpdates;
-import com.pengrad.telegrambot.request.SendChatAction;
-import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.BaseResponse;
-import com.pengrad.telegrambot.response.GetUpdatesResponse;
-import com.pengrad.telegrambot.response.SendResponse;
 
 public class Main {
+	
+	final private static Long CINCO_MINUTOS = 1L;
 
-	public static void main(String[] args) {
+	public static void main(String[] args)  {
 		
-		
-		//Criação do objeto bot com as informações de acesso
-		TelegramBot bot = TelegramBotAdapter.build("SEU_TOKEN_ACESSO");
-		
-		//objeto responsável por receber as mensagens
-		GetUpdatesResponse updatesResponse;
-		
-		//objeto responsável por gerenciar o envio de respostas
-		SendResponse sendResponse;
-		
-		//objeto responsável por gerenciar o envio de ações do chat
-		BaseResponse baseResponse;
+		MeuBot meuBot = new MeuBot();
 		
 		//controle de off-set, isto é, a partir deste ID será lido as mensagens pendentes na fila
 		int m=0;
 		
-		//loop infinito pode ser alterado por algum timer de intervalo curto
-//		while (true){
-//			
-//		}
-		//executa comando no Telegram para obter as mensagens pendentes a partir de um off-set (limite inicial)
-		updatesResponse = bot.execute(new GetUpdates().limit(100).offset(m));
+		//loop que é executado por cinco minutos
+		LocalDateTime agora = LocalDateTime.now();
 		
-		//lista de mensagens
-		List<Update> updates = updatesResponse.updates();
-		
-		//análise de cada ação da mensagem
-		for (Update update : updates) {
-		
-			//atualização do off-set
-			m = update.updateId()+1;
-			System.out.println("Recebendo mensagem: " + update.message().text());
+		while (LocalDateTime.now().isBefore(agora.plusMinutes(CINCO_MINUTOS)) ){
 			
-			//envio de "Escrevendo" antes de enviar a resposta
-			baseResponse = bot.execute(new SendChatAction(update.message().chat().id(), ChatAction.typing.name()));
+			//lista de mensagens
+			List<Update> updates = meuBot.mensagensPendentes(m);
 			
-			//verificação de ação de chat foi enviada com sucesso
-			System.out.println("Resposta de Chat Action Enviada ? " + baseResponse.isOk());
-	
-			//envio da mensagem de resposta
-			sendResponse = bot.execute(new SendMessage(update.message().chat().id(),"Não entendi..."));
+			//análise de cada ação da mensagem
+			for (Update update : updates) {
+				
+				//atualização do off-set
+				m = update.updateId()+1;
+				System.out.println("Recebendo mensagem: " + update.message().text());
+				
+				//verificação de ação de chat foi enviada com sucesso
+				System.out.println(meuBot.estouEscrevendo(update));
+				
+				//verificação de mensagem enviada com sucesso
+				System.out.println(meuBot.mensagemEnviada(update));
+			}
 			
-			//verificação de mensagem enviada com sucesso
-			System.out.println("Mensagem Enviada ? " + sendResponse.isOk());
 		}
+		
 	}
 
 }
