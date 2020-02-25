@@ -1,0 +1,9 @@
+Projeto de bot para o Telegram do usuário Majahbot
+
+Autores: 335232 - Carlos Eduardo Zanchetta
+		 335339 - Deivid Christian Michetti Csapó
+		 335798 - Victor Hugo Rodrigues de Oliveira
+
+O projeto utiliza maven, portanto é necessário que seja importado com maven.
+Ao enviar uma mensagem para o usuário do telegram Majahbot, é retornada uma mensagem com o nome do usuário que enviou a mensagem, informando que o canal de atendimento está indisponível.
+

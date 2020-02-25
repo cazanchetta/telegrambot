@@ -62,7 +62,9 @@ public class MajahBot {
 	 * @return Mensagem de retorno
 	 */
 	public String mensagemEnviada(final Update update) {
-		SendResponse sendResponse = bot.execute(new SendMessage(update.message().chat().id(),"Não entendi..."));
+		String nomeUsuario = update.message().chat().firstName();
+		String mensagem = ", nosso canal de atendimento está indisponível, favor tentar mais tarde.";
+		SendResponse sendResponse = bot.execute(new SendMessage(update.message().chat().id(),"Olá " + nomeUsuario + mensagem));
 		return "Mensagem Enviada ? " + sendResponse.isOk();
 	}
 

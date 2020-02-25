@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.Update;
 
 /**
  * Classe principal onde será executado o projeto de Bot no Telegram para o usuário Majahbot
+ * O projeto deve ser importado utilizando maven.
  * @author 335232, 335339, 335798
  * @author Carlos Eduardo Zanchetta, Deivid Christian Michetti Csapó, Victor Hugo Rodrigues de Oliveira
  */
